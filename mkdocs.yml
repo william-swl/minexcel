@@ -1,0 +1,18 @@
+site_name: minexcel
+site_description: "A python package"
+site_url: "https://william-swl.github.io/minexcel"
+repo_url: "https://github.com/william-swl/minexcel"
+repo_name: "william-swl/minexcel"
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_root_heading: false
+            show_root_toc_entry: false
+nav:
+- Readme: index.md
+- Reference: reference.md
+theme:
+  name: material
