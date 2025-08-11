@@ -1,6 +1,5 @@
 def check_int_serial(ser, sort=False):
     # sort
-
     if sort:
         ser = sorted(list(ser))
     else:
