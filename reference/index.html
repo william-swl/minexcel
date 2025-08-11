@@ -467,16 +467,9 @@
             </td>
             <td>
               <div class="doc-md-description">
-                <p>{
-'block_nrow': int,          # Total rows in template
-'block_ncol': int,          # Total columns in template
-'data_nrow': int,           # Number of rows in data zone
-'data_ncol': int,           # Number of columns in data zone
-'data_rows_list': List[int], # Row indices in data zone
-'data_cols_list': List[int], # Column indices in data zone
-'tablemeta': Dict[str, Tuple[int, int]], # Table metadata positions
-'rowmeta': Dict[str, Dict[str, int]],    # Row metadata definitions
-'colmeta': Dict[str, Dict[str, int]]     # Column metadata definitions</p>
+                <ul>
+<li>'block_nrow': int,          # Total rows in template</li>
+</ul>
               </div>
             </td>
           </tr>
@@ -486,7 +479,93 @@
             </td>
             <td>
               <div class="doc-md-description">
-                <p>}</p>
+                <ul>
+<li>'block_ncol': int,          # Total columns in template</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>'data_nrow': int,           # Number of rows in data zone</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>'data_ncol': int,           # Number of columns in data zone</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>'data_rows_list': List[int], # Row indices in data zone</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>'data_cols_list': List[int], # Column indices in data zone</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>'tablemeta': Dict[str, Tuple[int, int]], # Table metadata positions</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>'rowmeta': Dict[str, Dict[str, int]],    # Row metadata definitions</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>'colmeta': Dict[str, Dict[str, int]]     # Column metadata definitions</li>
+</ul>
               </div>
             </td>
           </tr>
@@ -509,11 +588,13 @@
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If the template structure doesn't meet requirements:
-- Data zone must be contiguous
-- Each rowmeta key must appear only in a single column
-- Each colmeta key must appear only in a single row
-- Metadata ranges must be serial and within data zone</p>
+                <p>If the template structure doesn't meet requirements:</p>
+<ul>
+<li>Data zone must be contiguous</li>
+<li>Each rowmeta key must appear only in a single column</li>
+<li>Each colmeta key must appear only in a single row</li>
+<li>Metadata ranges must be serial and within data zone</li>
+</ul>
               </div>
             </td>
           </tr>
@@ -696,7 +777,8 @@
 <span class="normal">178</span>
 <span class="normal">179</span>
 <span class="normal">180</span>
-<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse_template</span><span class="p">(</span><span class="n">template_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">181</span>
+<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse_template</span><span class="p">(</span><span class="n">template_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses an Excel template file to extract metadata information about its structure.</span>
 
@@ -711,24 +793,25 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A dictionary with the following structure:</span>
-<span class="sd">        {</span>
-<span class="sd">            &#39;block_nrow&#39;: int,          # Total rows in template</span>
-<span class="sd">            &#39;block_ncol&#39;: int,          # Total columns in template</span>
-<span class="sd">            &#39;data_nrow&#39;: int,           # Number of rows in data zone</span>
-<span class="sd">            &#39;data_ncol&#39;: int,           # Number of columns in data zone</span>
-<span class="sd">            &#39;data_rows_list&#39;: List[int], # Row indices in data zone</span>
-<span class="sd">            &#39;data_cols_list&#39;: List[int], # Column indices in data zone</span>
-<span class="sd">            &#39;tablemeta&#39;: Dict[str, Tuple[int, int]], # Table metadata positions</span>
-<span class="sd">            &#39;rowmeta&#39;: Dict[str, Dict[str, int]],    # Row metadata definitions</span>
-<span class="sd">            &#39;colmeta&#39;: Dict[str, Dict[str, int]]     # Column metadata definitions</span>
-<span class="sd">        }</span>
+
+<span class="sd">        - &#39;block_nrow&#39;: int,          # Total rows in template</span>
+<span class="sd">        - &#39;block_ncol&#39;: int,          # Total columns in template</span>
+<span class="sd">        - &#39;data_nrow&#39;: int,           # Number of rows in data zone</span>
+<span class="sd">        - &#39;data_ncol&#39;: int,           # Number of columns in data zone</span>
+<span class="sd">        - &#39;data_rows_list&#39;: List[int], # Row indices in data zone</span>
+<span class="sd">        - &#39;data_cols_list&#39;: List[int], # Column indices in data zone</span>
+<span class="sd">        - &#39;tablemeta&#39;: Dict[str, Tuple[int, int]], # Table metadata positions</span>
+<span class="sd">        - &#39;rowmeta&#39;: Dict[str, Dict[str, int]],    # Row metadata definitions</span>
+<span class="sd">        - &#39;colmeta&#39;: Dict[str, Dict[str, int]]     # Column metadata definitions</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        AssertionError: If the template structure doesn&#39;t meet requirements:</span>
+
 <span class="sd">            - Data zone must be contiguous</span>
 <span class="sd">            - Each rowmeta key must appear only in a single column</span>
 <span class="sd">            - Each colmeta key must appear only in a single row</span>
 <span class="sd">            - Metadata ranges must be serial and within data zone</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;block_nrow&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
