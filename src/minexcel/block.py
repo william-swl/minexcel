@@ -20,24 +20,25 @@ def parse_template(template_file: str) -> Dict[str, Any]:
 
     Returns:
         A dictionary with the following structure:
-        {
-            'block_nrow': int,          # Total rows in template
-            'block_ncol': int,          # Total columns in template
-            'data_nrow': int,           # Number of rows in data zone
-            'data_ncol': int,           # Number of columns in data zone
-            'data_rows_list': List[int], # Row indices in data zone
-            'data_cols_list': List[int], # Column indices in data zone
-            'tablemeta': Dict[str, Tuple[int, int]], # Table metadata positions
-            'rowmeta': Dict[str, Dict[str, int]],    # Row metadata definitions
-            'colmeta': Dict[str, Dict[str, int]]     # Column metadata definitions
-        }
+
+        - 'block_nrow': int,          # Total rows in template
+        - 'block_ncol': int,          # Total columns in template
+        - 'data_nrow': int,           # Number of rows in data zone
+        - 'data_ncol': int,           # Number of columns in data zone
+        - 'data_rows_list': List[int], # Row indices in data zone
+        - 'data_cols_list': List[int], # Column indices in data zone
+        - 'tablemeta': Dict[str, Tuple[int, int]], # Table metadata positions
+        - 'rowmeta': Dict[str, Dict[str, int]],    # Row metadata definitions
+        - 'colmeta': Dict[str, Dict[str, int]]     # Column metadata definitions
 
     Raises:
         AssertionError: If the template structure doesn't meet requirements:
+
             - Data zone must be contiguous
             - Each rowmeta key must appear only in a single column
             - Each colmeta key must appear only in a single row
             - Metadata ranges must be serial and within data zone
+
     """
     result = {
         "block_nrow": None,
