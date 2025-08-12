@@ -4,6 +4,10 @@
 
 `minexcel` is a Python package designed for processing complex Excel tables and extracting structured data blocks from formatted layouts.
 
+```
+pip install minexcel
+```
+
 # Reading Formatted Data Blocks in Excel
 
 ![](img/block-data.png)

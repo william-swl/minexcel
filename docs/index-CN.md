@@ -2,6 +2,10 @@
 
 `minexcel` 是一个处理复杂 Excel 表格，挖掘有效数据的 python 包
 
+```
+pip install minexcel
+```
+
 # 读取 excel 中格式化的数据 block
 
 ![](img/block-data.png)
