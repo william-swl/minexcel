@@ -165,14 +165,14 @@ def parse_template(template_file: str) -> Dict[str, Any]:
 
 def parse_block(block: pd.DataFrame, tmpl: Dict[str, Any]) -> pd.DataFrame:
     """
-    Parses a structured data block into a normalized DataFrame using a template definition.
+    Parses a structured data block into a DataFrame using a template definition.
 
     This function processes a DataFrame according to a template specification that defines:
     - Table-level metadata locations
     - Row metadata ranges
     - Column metadata ranges
     - Data value locations
-    The parsed result combines metadata with data values in a normalized long format.
+    The parsed result combines metadata with data values in long format.
 
     Args:
         block: Input DataFrame containing structured data to be parsed.
@@ -187,7 +187,7 @@ def parse_block(block: pd.DataFrame, tmpl: Dict[str, Any]) -> pd.DataFrame:
             'data_cols_list': List of column indices containing data values
 
     Returns:
-        pd.DataFrame: Normalized DataFrame containing:
+        pd.DataFrame: DataFrame containing:
             - 'row_index': Original row index
             - 'col_index': Original column index
             - 'value': Data value from the block
@@ -238,7 +238,7 @@ def parse_block(block: pd.DataFrame, tmpl: Dict[str, Any]) -> pd.DataFrame:
     # Extract core data values
     data = block.iloc[tmpl["data_rows_list"], tmpl["data_cols_list"]]
 
-    # Convert data to long format (normalized structure)
+    # Convert data to long format (styled structure)
     result = data.reset_index(names="row_index").melt(
         id_vars="row_index", var_name="col_index", value_name="value"
     )
@@ -260,5 +260,92 @@ def parse_block(block: pd.DataFrame, tmpl: Dict[str, Any]) -> pd.DataFrame:
     return result
 
 
-def read_block():
-    return 0
+def read_block_excel(
+    path: str,
+    tmpl: Dict[str, Any],
+    skipheader: int = 0,
+    skipfooter: int = 0,
+    skipleft: int = 0,
+    skipright: int = 0,
+    intervalrows: int = 0,
+    intervalcols: int = 0,
+) -> pd.DataFrame:
+    """
+    Reads structured Excel data blocks from a file and parses them according to a template.
+
+    This function processes an Excel file containing multiple structured data blocks separated
+    by specified intervals. Each block is parsed using the provided template definition to extract
+    data.
+
+    Args:
+        path: Path to the Excel file
+        tmpl: Template dictionary defining block structure
+        skipheader: Number of rows to skip at top of sheet
+        skipfooter: Number of rows to skip at bottom of sheet
+        skipleft: Number of columns to skip at left of sheet
+        skipright: Number of columns to skip at right of sheet
+        intervalrows: Number of separator rows between vertical blocks
+        intervalcols: Number of separator columns between horizontal blocks
+
+    Returns:
+        pd.DataFrame: Concatenated DataFrame containing all parsed blocks in long format
+
+    Raises:
+        AssertionError: If sheet dimensions don't fit specified block structure
+
+    """
+    # Read Excel file with merged cell handling
+    full = read_excel_with_merged_cell(path)
+
+    # Extract full contents
+    row_start = skipheader
+    row_end = full.shape[0] - skipfooter
+    col_start = skipleft
+    col_end = full.shape[1] - skipright
+
+    full = full.iloc[row_start:row_end, col_start:col_end]
+
+    # Reset index to integer-based for consistent slicing
+    full = pd.DataFrame(full.values)
+
+    # Calculate number of horizontal blocks
+    nblock_in_row = round(full.shape[1] / (tmpl["block_ncol"] + intervalcols))
+    expected_cols = (
+        nblock_in_row * tmpl["block_ncol"] + (nblock_in_row - 1) * intervalcols
+    )
+    assert full.shape[1] == expected_cols, "Columns don't fit block"
+
+    # Calculate number of vertical blocks
+    nblock_in_col = round(full.shape[0] / (tmpl["block_nrow"] + intervalrows))
+    expected_rows = (
+        nblock_in_col * tmpl["block_nrow"] + (nblock_in_col - 1) * intervalrows
+    )
+    assert full.shape[0] == expected_rows, "Rows don't fit block"
+
+    # Calculate starting positions for each block
+    block_row_starts = [
+        i * tmpl["block_nrow"] + i * intervalrows for i in range(nblock_in_col)
+    ]
+    block_col_starts = [
+        i * tmpl["block_ncol"] + i * intervalcols for i in range(nblock_in_row)
+    ]
+
+    # Extract all valid data blocks
+    blocks = []
+    for row_start in block_row_starts:
+        for col_start in block_col_starts:
+            # Extract block using template dimensions
+            block = full.iloc[
+                range(row_start, row_start + tmpl["block_nrow"]),
+                range(col_start, col_start + tmpl["block_ncol"]),
+            ]
+            # Skip fully empty blocks
+            if all(block.isna().all()):
+                continue
+            blocks.append(block)
+
+    # Parse each block using template and combine results
+    result = [parse_block(b, tmpl) for b in blocks]
+    result = pd.concat(result, axis=0)
+
+    return result
