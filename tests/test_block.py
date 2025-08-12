@@ -1,4 +1,8 @@
 import minexcel as mxl
+import pandas as pd
+
+pd.set_option("display.max_rows", None)
+pd.set_option("display.max_columns", None)
 
 
 def test_parse_template():
@@ -23,3 +27,24 @@ def test_parse_template():
     }
 
     assert res == res_ref
+
+
+def test_read_block_excel0(snapshot):
+    tmpl = mxl.parse_template("tests/files/template.xlsx")
+    path = "tests/files/data.xlsx"
+    res = mxl.read_block_excel(path, tmpl, skipheader=1)
+    snapshot.assert_match(res)
+
+
+def test_read_block_excel1(snapshot):
+    tmpl = mxl.parse_template("tests/files/template.xlsx")
+    path = "tests/files/data1.xlsx"
+    res = mxl.read_block_excel(path, tmpl, skipheader=1, intervalcols=1)
+    snapshot.assert_match(res)
+
+
+def test_read_block_excel2(snapshot):
+    tmpl = mxl.parse_template("tests/files/template.xlsx")
+    path = "tests/files/data2.xlsx"
+    res = mxl.read_block_excel(path, tmpl, skipheader=1, intervalrows=2, intervalcols=1)
+    snapshot.assert_match(res)

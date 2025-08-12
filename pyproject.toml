@@ -25,4 +25,5 @@ dev = [
     "mypy>=1.17.1",
     "pytest>=8.4.1",
     "ruff>=0.12.8",
+    "snapshottest>=0.6.0",
 ]
