@@ -2,10 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://william-swl.github.io/minexcel/</loc>
-         <lastmod>2025-08-11</lastmod>
+         <lastmod>2025-08-12</lastmod>
+    </url>
+    <url>
+         <loc>https://william-swl.github.io/minexcel/index-CN/</loc>
+         <lastmod>2025-08-12</lastmod>
     </url>
     <url>
          <loc>https://william-swl.github.io/minexcel/reference/</loc>
-         <lastmod>2025-08-11</lastmod>
+         <lastmod>2025-08-12</lastmod>
     </url>
 </urlset>

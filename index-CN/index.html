@@ -10,23 +10,21 @@
       
       
       
-        <link rel="canonical" href="https://william-swl.github.io/minexcel/">
+        <link rel="canonical" href="https://william-swl.github.io/minexcel/index-CN/">
       
       
       
-        <link rel="next" href="reference/">
       
-      
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
     
     
       
-        <title>minexcel</title>
+        <title>minexcel - minexcel</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.7e37652d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
       
       
 
@@ -45,9 +43,9 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +80,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="minexcel" class="md-header__button md-logo" aria-label="minexcel" data-md-component="logo">
+    <a href=".." title="minexcel" class="md-header__button md-logo" aria-label="minexcel" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -102,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Readme
+              minexcel
             
           </span>
         </div>
@@ -192,7 +190,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="minexcel" class="md-nav__button md-logo" aria-label="minexcel" data-md-component="logo">
+    <a href=".." title="minexcel" class="md-nav__button md-logo" aria-label="minexcel" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -219,19 +217,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -242,7 +231,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -254,7 +242,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/" class="md-nav__link">
+      <a href="../reference/" class="md-nav__link">
         
   
   
@@ -307,38 +295,37 @@
 
 
 <h1 id="minexcel">minexcel</h1>
-<p><a href="index-CN/">中文文档</a></p>
-<p><code>minexcel</code> is a Python package designed for processing complex Excel tables and extracting structured data blocks from formatted layouts.</p>
-<h1 id="reading-formatted-data-blocks-in-excel">Reading Formatted Data Blocks in Excel</h1>
-<p><img alt="" src="img/block-data.png" /></p>
-<p>Formatted data blocks in Excel are often challenging to parse, especially when merged cells are involved. <code>minexcel</code> abstracts the cells in data block into distinct components and supports simplified markup for configuration.</p>
-<p>To define a template, you can create a new <code>.xlsx</code> file and structure your data block as follows:</p>
+<p><code>minexcel</code> 是一个处理复杂 Excel 表格，挖掘有效数据的 python 包</p>
+<h1 id="excel-block">读取 excel 中格式化的数据 block</h1>
+<p><img alt="" src="../img/block-data.png" /></p>
+<p>excel 中格式化的数据 block 常常难以被简单读取，在涉及到合并单元格时更是如此。<code>minexcel</code> 将数据 block 抽象为几种组成部分，并支持用简易的标记表示</p>
+<p>你可以新建一个<code>.xlsx</code>文件，按以下格式输入数据 block 的模板：</p>
 <ul>
 <li>
-<p><code>[tablemeta]</code>: Table metadata. Each block can have multiple table metadata entries, but each entry must contain a single value.</p>
+<p><code>[tablemeta]</code>：表格元数据。每个 block 可以有多个表格元数据，但每个表格元数据只能有一个值</p>
 </li>
 <li>
-<p><code>[rowmeta]</code>: Row metadata. Represents row-wise extended information, including traditional rownames.</p>
+<p><code>[rowmeta]</code>：行元数据。数据在行方向的扩展信息，包括传统的行名</p>
 </li>
 <li>
-<p><code>[colmeta]</code>: Column metadata. Represents column-wise extended information including traditional colnames.</p>
+<p><code>[colmeta]</code>：列元数据。数据在列方向的扩展信息，包括传统的列名</p>
 </li>
 <li>
-<p>Leave empty: Core data area. This region should contain no rowname or colname.</p>
+<p>留空：核心数据区域。该区域应该无行名、无列名</p>
 </li>
 <li>
-<p><code>[ignore]</code>: Cells to skip during parsing. Note: The original cell containing the metadata name must be marked as <code>[ignore]</code>.</p>
+<p><code>[ignore]</code>：解析时忽略的单元格。注意，原表格中元数据名称所在的单元格，应标记为<code>[ignore]</code></p>
 </li>
 </ul>
-<p><img alt="" src="img/block-template.png" /></p>
-<p>Use <code>minexcel</code> to parse the data:</p>
+<p><img alt="" src="../img/block-template.png" /></p>
+<p>随后，使用 <code>minexcel</code> 解析</p>
 <pre><code class="language-python">import minexcel as mxl
 
 tmpl = mxl.parse_template(&quot;template.xlsx&quot;)
 res = mxl.read_block_excel(&quot;data.xlsx&quot;, tmpl)
 </code></pre>
-<p>This returns structured data matching the template's design:</p>
-<p><img alt="" src="img/block-result.png" /></p>
+<p>可得到结构化的数据</p>
+<p><img alt="" src="../img/block-result.png" /></p>
 
 
 
@@ -387,10 +374,10 @@ res = mxl.read_block_excel(&quot;data.xlsx&quot;, tmpl)
     
     
       
-      <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.50899def.min.js"></script>
+      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
       
     
   </body>

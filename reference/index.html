@@ -294,9 +294,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#minexcel.block.parse_block" class="md-nav__link">
+    <span class="md-ellipsis">
+      parse_block
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#minexcel.block.parse_template" class="md-nav__link">
     <span class="md-ellipsis">
       parse_template
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minexcel.block.read_block_excel" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_block_excel
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minexcel.utils.read_excel_with_merged_cell" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_excel_with_merged_cell
     </span>
   </a>
   
@@ -337,9 +364,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#minexcel.block.parse_block" class="md-nav__link">
+    <span class="md-ellipsis">
+      parse_block
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#minexcel.block.parse_template" class="md-nav__link">
     <span class="md-ellipsis">
       parse_template
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minexcel.block.read_block_excel" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_block_excel
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minexcel.utils.read_excel_with_merged_cell" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_excel_with_merged_cell
     </span>
   </a>
   
@@ -391,6 +445,330 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="minexcel.block.parse_block" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">parse_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">tmpl</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Parses a structured data block into a DataFrame using a template definition.</p>
+<p>This function processes a DataFrame according to a template specification that defines:
+- Table-level metadata locations
+- Row metadata ranges
+- Column metadata ranges
+- Data value locations
+The parsed result combines metadata with data values in long format.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>block</code>
+            </td>
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input DataFrame containing structured data to be parsed.
+Expected shape: (tmpl['block_nrow'], tmpl['block_ncol'])</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>tmpl</code>
+            </td>
+            <td>
+                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Template dictionary defining the block structure. Expected keys:
+'block_nrow': Expected number of rows in block
+'block_ncol': Expected number of columns in block
+'tablemeta': Dict of {metadata_key: (row, col)} positions
+'rowmeta': Dict of {metadata_key: {'col': col_index, 'start': start_row, 'end': end_row}}
+'colmeta': Dict of {metadata_key: {'row': row_index, 'start': start_col, 'end': end_col}}
+'data_rows_list': List of row indices containing data values
+'data_cols_list': List of column indices containing data values</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>pd.DataFrame: DataFrame containing:
+- 'row_index': Original row index
+- 'col_index': Original column index
+- 'value': Data value from the block
+- Columns for each tablemeta key with corresponding values
+- Columns for each rowmeta key with row-level metadata
+- Columns for each colmeta key with column-level metadata</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="AssertionError">AssertionError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If input block dimensions don't match template specifications</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/minexcel/block.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse_block</span><span class="p">(</span><span class="n">block</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">tmpl</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses a structured data block into a DataFrame using a template definition.</span>
+
+<span class="sd">    This function processes a DataFrame according to a template specification that defines:</span>
+<span class="sd">    - Table-level metadata locations</span>
+<span class="sd">    - Row metadata ranges</span>
+<span class="sd">    - Column metadata ranges</span>
+<span class="sd">    - Data value locations</span>
+<span class="sd">    The parsed result combines metadata with data values in long format.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        block: Input DataFrame containing structured data to be parsed.</span>
+<span class="sd">            Expected shape: (tmpl[&#39;block_nrow&#39;], tmpl[&#39;block_ncol&#39;])</span>
+<span class="sd">        tmpl: Template dictionary defining the block structure. Expected keys:</span>
+<span class="sd">            &#39;block_nrow&#39;: Expected number of rows in block</span>
+<span class="sd">            &#39;block_ncol&#39;: Expected number of columns in block</span>
+<span class="sd">            &#39;tablemeta&#39;: Dict of {metadata_key: (row, col)} positions</span>
+<span class="sd">            &#39;rowmeta&#39;: Dict of {metadata_key: {&#39;col&#39;: col_index, &#39;start&#39;: start_row, &#39;end&#39;: end_row}}</span>
+<span class="sd">            &#39;colmeta&#39;: Dict of {metadata_key: {&#39;row&#39;: row_index, &#39;start&#39;: start_col, &#39;end&#39;: end_col}}</span>
+<span class="sd">            &#39;data_rows_list&#39;: List of row indices containing data values</span>
+<span class="sd">            &#39;data_cols_list&#39;: List of column indices containing data values</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: DataFrame containing:</span>
+<span class="sd">            - &#39;row_index&#39;: Original row index</span>
+<span class="sd">            - &#39;col_index&#39;: Original column index</span>
+<span class="sd">            - &#39;value&#39;: Data value from the block</span>
+<span class="sd">            - Columns for each tablemeta key with corresponding values</span>
+<span class="sd">            - Columns for each rowmeta key with row-level metadata</span>
+<span class="sd">            - Columns for each colmeta key with column-level metadata</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If input block dimensions don&#39;t match template specifications</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input block matches template dimensions</span>
+    <span class="k">assert</span> <span class="n">block</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">],</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">])</span>
+
+    <span class="c1"># Store original indexes for later reconstruction</span>
+    <span class="n">block_raw_row_idx</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">block_raw_col_idx</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="c1"># Convert to position-based integer indexes</span>
+    <span class="n">block</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="c1"># Create mapping between positional indexes and original indexes</span>
+    <span class="n">row_idx_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">block_raw_row_idx</span><span class="p">))</span>
+    <span class="n">col_idx_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">block_raw_col_idx</span><span class="p">))</span>
+
+    <span class="c1"># Extract table-level metadata</span>
+    <span class="n">block_tablemeta</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;tablemeta&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;tablemeta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">block_tablemeta</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="c1"># Extract row-level metadata</span>
+    <span class="n">block_rowmeta</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;rowmeta&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;rowmeta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Slice row metadata range</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">pos</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">]</span> <span class="p">:</span> <span class="n">pos</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pos</span><span class="p">[</span><span class="s2">&quot;col&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="n">block_rowmeta</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
+
+    <span class="c1"># Extract column-level metadata</span>
+    <span class="n">block_colmeta</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;colmeta&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;colmeta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Slice column metadata range</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">pos</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">]</span> <span class="p">:</span> <span class="n">pos</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="n">block_colmeta</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
+
+    <span class="c1"># Extract core data values</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;data_rows_list&quot;</span><span class="p">],</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;data_cols_list&quot;</span><span class="p">]]</span>
+
+    <span class="c1"># Convert data to long format (styled structure)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;row_index&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
+        <span class="n">id_vars</span><span class="o">=</span><span class="s2">&quot;row_index&quot;</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;col_index&quot;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Merge metadata into result</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">block_tablemeta</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">block_rowmeta</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;row_index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()]</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">block_colmeta</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;col_index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()]</span>
+
+    <span class="c1"># Restore original indexes</span>
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;row_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">row_idx_map</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;row_index&quot;</span><span class="p">]]</span>
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;col_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">col_idx_map</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;col_index&quot;</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 
@@ -759,26 +1137,7 @@
 <span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse_template</span><span class="p">(</span><span class="n">template_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse_template</span><span class="p">(</span><span class="n">template_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses an Excel template file to extract metadata information about its structure.</span>
 
@@ -825,26 +1184,7 @@
         <span class="s2">&quot;colmeta&quot;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="p">}</span>
 
-    <span class="c1"># Load workbook and get active sheet</span>
-    <span class="n">workbook</span> <span class="o">=</span> <span class="n">opx</span><span class="o">.</span><span class="n">load_workbook</span><span class="p">(</span><span class="n">template_file</span><span class="p">)</span>
-    <span class="n">template</span> <span class="o">=</span> <span class="n">workbook</span><span class="o">.</span><span class="n">active</span>
-
-    <span class="c1"># Process merged cells by unmerging and copying top-left value to all cells</span>
-    <span class="n">merged_ranges</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">template</span><span class="o">.</span><span class="n">merged_cells</span><span class="o">.</span><span class="n">ranges</span><span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">merged_range</span> <span class="ow">in</span> <span class="n">merged_ranges</span><span class="p">:</span>
-        <span class="n">template</span><span class="o">.</span><span class="n">unmerge_cells</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">merged_range</span><span class="p">))</span>
-
-    <span class="k">for</span> <span class="n">merged_range</span> <span class="ow">in</span> <span class="n">merged_ranges</span><span class="p">:</span>
-        <span class="n">min_col</span><span class="p">,</span> <span class="n">min_row</span><span class="p">,</span> <span class="n">max_col</span><span class="p">,</span> <span class="n">max_row</span> <span class="o">=</span> <span class="n">merged_range</span><span class="o">.</span><span class="n">bounds</span>
-        <span class="n">cell_value</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">min_row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">min_col</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
-
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_row</span><span class="p">,</span> <span class="n">max_row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_col</span><span class="p">,</span> <span class="n">max_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="n">template</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">cell_value</span>
-
-    <span class="c1"># Convert to DataFrame for easier processing</span>
-    <span class="n">tmpl_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">tmpl_df</span> <span class="o">=</span> <span class="n">read_excel_with_merged_cell</span><span class="p">(</span><span class="n">template_file</span><span class="p">)</span>
 
     <span class="c1"># 1. Get basic dimensions</span>
     <span class="n">result</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmpl_df</span><span class="o">.</span><span class="n">shape</span>
@@ -959,6 +1299,397 @@
 
 </div>
 
+<div class="doc doc-object doc-function">
+
+
+<h2 id="minexcel.block.read_block_excel" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">read_block_excel</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">tmpl</span><span class="p">,</span> <span class="n">skipheader</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipfooter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipleft</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipright</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">intervalrows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">intervalcols</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Reads structured Excel data blocks from a file and parses them according to a template.</p>
+<p>This function processes an Excel file containing multiple structured data blocks separated
+by specified intervals. Each block is parsed using the provided template definition to extract
+data.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to the Excel file</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>tmpl</code>
+            </td>
+            <td>
+                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Template dictionary defining block structure</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>skipheader</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of rows to skip at top of sheet</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>skipfooter</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of rows to skip at bottom of sheet</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>skipleft</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of columns to skip at left of sheet</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>skipright</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of columns to skip at right of sheet</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>intervalrows</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of separator rows between vertical blocks</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>intervalcols</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of separator columns between horizontal blocks</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>pd.DataFrame: Concatenated DataFrame containing all parsed blocks in long format</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="AssertionError">AssertionError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If sheet dimensions don't fit specified block structure</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/minexcel/block.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">read_block_excel</span><span class="p">(</span>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">tmpl</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">skipheader</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">skipfooter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">skipleft</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">skipright</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">intervalrows</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">intervalcols</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads structured Excel data blocks from a file and parses them according to a template.</span>
+
+<span class="sd">    This function processes an Excel file containing multiple structured data blocks separated</span>
+<span class="sd">    by specified intervals. Each block is parsed using the provided template definition to extract</span>
+<span class="sd">    data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: Path to the Excel file</span>
+<span class="sd">        tmpl: Template dictionary defining block structure</span>
+<span class="sd">        skipheader: Number of rows to skip at top of sheet</span>
+<span class="sd">        skipfooter: Number of rows to skip at bottom of sheet</span>
+<span class="sd">        skipleft: Number of columns to skip at left of sheet</span>
+<span class="sd">        skipright: Number of columns to skip at right of sheet</span>
+<span class="sd">        intervalrows: Number of separator rows between vertical blocks</span>
+<span class="sd">        intervalcols: Number of separator columns between horizontal blocks</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: Concatenated DataFrame containing all parsed blocks in long format</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If sheet dimensions don&#39;t fit specified block structure</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Read Excel file with merged cell handling</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">read_excel_with_merged_cell</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="c1"># Extract full contents</span>
+    <span class="n">row_start</span> <span class="o">=</span> <span class="n">skipheader</span>
+    <span class="n">row_end</span> <span class="o">=</span> <span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">skipfooter</span>
+    <span class="n">col_start</span> <span class="o">=</span> <span class="n">skipleft</span>
+    <span class="n">col_end</span> <span class="o">=</span> <span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">skipright</span>
+
+    <span class="n">full</span> <span class="o">=</span> <span class="n">full</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">row_start</span><span class="p">:</span><span class="n">row_end</span><span class="p">,</span> <span class="n">col_start</span><span class="p">:</span><span class="n">col_end</span><span class="p">]</span>
+
+    <span class="c1"># Reset index to integer-based for consistent slicing</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="c1"># Calculate number of horizontal blocks</span>
+    <span class="n">nblock_in_row</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">intervalcols</span><span class="p">))</span>
+    <span class="n">expected_cols</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">nblock_in_row</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">nblock_in_row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">intervalcols</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">expected_cols</span><span class="p">,</span> <span class="s2">&quot;Columns don&#39;t fit block&quot;</span>
+
+    <span class="c1"># Calculate number of vertical blocks</span>
+    <span class="n">nblock_in_col</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">intervalrows</span><span class="p">))</span>
+    <span class="n">expected_rows</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">nblock_in_col</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">nblock_in_col</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">intervalrows</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">expected_rows</span><span class="p">,</span> <span class="s2">&quot;Rows don&#39;t fit block&quot;</span>
+
+    <span class="c1"># Calculate starting positions for each block</span>
+    <span class="n">block_row_starts</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">i</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">intervalrows</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nblock_in_col</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">block_col_starts</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">i</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">intervalcols</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nblock_in_row</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Extract all valid data blocks</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row_start</span> <span class="ow">in</span> <span class="n">block_row_starts</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col_start</span> <span class="ow">in</span> <span class="n">block_col_starts</span><span class="p">:</span>
+            <span class="c1"># Extract block using template dimensions</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="n">full</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span>
+                <span class="nb">range</span><span class="p">(</span><span class="n">row_start</span><span class="p">,</span> <span class="n">row_start</span> <span class="o">+</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">]),</span>
+                <span class="nb">range</span><span class="p">(</span><span class="n">col_start</span><span class="p">,</span> <span class="n">col_start</span> <span class="o">+</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]),</span>
+            <span class="p">]</span>
+            <span class="c1"># Skip fully empty blocks</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
+                <span class="k">continue</span>
+            <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+
+    <span class="c1"># Parse each block using template and combine results</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">parse_block</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">tmpl</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
 
 
   </div>
@@ -991,6 +1722,198 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="minexcel.utils.read_excel_with_merged_cell" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">read_excel_with_merged_cell</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sheetname</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Reads an Excel file and processes merged cells by filling the merged area with the top-left cell's value.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to the Excel file</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>sheetname</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Name of the sheet to read. If None, the active sheet is used</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>DataFrame containing the data from the Excel sheet with merged cells processed</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="AssertionError">AssertionError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the provided sheetname is not in the workbook</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/minexcel/utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">read_excel_with_merged_cell</span><span class="p">(</span>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sheetname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads an Excel file and processes merged cells by filling the merged area with the top-left cell&#39;s value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: Path to the Excel file</span>
+<span class="sd">        sheetname: Name of the sheet to read. If None, the active sheet is used</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame containing the data from the Excel sheet with merged cells processed</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the provided sheetname is not in the workbook</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">wb</span> <span class="o">=</span> <span class="n">opx</span><span class="o">.</span><span class="n">load_workbook</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sheetname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ws</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">active</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">sheetname</span> <span class="ow">in</span> <span class="n">wb</span><span class="o">.</span><span class="n">sheetnames</span>
+        <span class="n">ws</span> <span class="o">=</span> <span class="n">wb</span><span class="p">[</span><span class="n">sheetname</span><span class="p">]</span>
+
+    <span class="n">merged_ranges</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">merged_cells</span><span class="o">.</span><span class="n">ranges</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">merged_range</span> <span class="ow">in</span> <span class="n">merged_ranges</span><span class="p">:</span>
+        <span class="n">ws</span><span class="o">.</span><span class="n">unmerge_cells</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">merged_range</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">merged_range</span> <span class="ow">in</span> <span class="n">merged_ranges</span><span class="p">:</span>
+        <span class="n">min_col</span><span class="p">,</span> <span class="n">min_row</span><span class="p">,</span> <span class="n">max_col</span><span class="p">,</span> <span class="n">max_row</span> <span class="o">=</span> <span class="n">merged_range</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="n">cell_value</span> <span class="o">=</span> <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">min_row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">min_col</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_row</span><span class="p">,</span> <span class="n">max_row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_col</span><span class="p">,</span> <span class="n">max_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">cell_value</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">ws</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
