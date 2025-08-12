@@ -10,6 +10,6 @@ doc_build:
     uv run mkdocs gh-deploy --clean
 
 publish:
-    doc_build
+    uv run mkdocs gh-deploy --clean
     git tag $(uv version --short)
     git push origin master --tags
