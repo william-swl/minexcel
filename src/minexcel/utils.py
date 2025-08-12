@@ -30,9 +30,6 @@ def read_excel_with_merged_cell(
     Raises:
         AssertionError: If the provided sheetname is not in the workbook
 
-    Example:
-        >>> df = read_excel_with_merged_cell('data.xlsx', 'Sheet1')
-        >>> print(df.head())
     """
     wb = opx.load_workbook(path, data_only=True)
     if sheetname is None:
