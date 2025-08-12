@@ -1,4 +1,4 @@
-from .utils import check_int_serial
+from .utils import check_int_serial, read_excel_with_merged_cell
 import openpyxl as opx
 import pandas as pd
 import re
@@ -52,26 +52,7 @@ def parse_template(template_file: str) -> Dict[str, Any]:
         "colmeta": {},
     }
 
-    # Load workbook and get active sheet
-    workbook = opx.load_workbook(template_file)
-    template = workbook.active
-
-    # Process merged cells by unmerging and copying top-left value to all cells
-    merged_ranges = [m for m in template.merged_cells.ranges]
-
-    for merged_range in merged_ranges:
-        template.unmerge_cells(str(merged_range))
-
-    for merged_range in merged_ranges:
-        min_col, min_row, max_col, max_row = merged_range.bounds
-        cell_value = template.cell(row=min_row, column=min_col).value
-
-        for row in range(min_row, max_row + 1):
-            for col in range(min_col, max_col + 1):
-                template.cell(row=row, column=col).value = cell_value
-
-    # Convert to DataFrame for easier processing
-    tmpl_df = pd.DataFrame(template.values, columns=None)
+    tmpl_df = read_excel_with_merged_cell(template_file)
 
     # 1. Get basic dimensions
     result["block_nrow"], result["block_ncol"] = tmpl_df.shape
@@ -178,6 +159,103 @@ def parse_template(template_file: str) -> Dict[str, Any]:
                 "start": min(range_list),
                 "end": max(range_list),
             }
+
+    return result
+
+
+def parse_block(block: pd.DataFrame, tmpl: Dict[str, Any]) -> pd.DataFrame:
+    """
+    Parses a structured data block into a normalized DataFrame using a template definition.
+
+    This function processes a DataFrame according to a template specification that defines:
+    - Table-level metadata locations
+    - Row metadata ranges
+    - Column metadata ranges
+    - Data value locations
+    The parsed result combines metadata with data values in a normalized long format.
+
+    Args:
+        block: Input DataFrame containing structured data to be parsed.
+            Expected shape: (tmpl['block_nrow'], tmpl['block_ncol'])
+        tmpl: Template dictionary defining the block structure. Expected keys:
+            'block_nrow': Expected number of rows in block
+            'block_ncol': Expected number of columns in block
+            'tablemeta': Dict of {metadata_key: (row, col)} positions
+            'rowmeta': Dict of {metadata_key: {'col': col_index, 'start': start_row, 'end': end_row}}
+            'colmeta': Dict of {metadata_key: {'row': row_index, 'start': start_col, 'end': end_col}}
+            'data_rows_list': List of row indices containing data values
+            'data_cols_list': List of column indices containing data values
+
+    Returns:
+        pd.DataFrame: Normalized DataFrame containing:
+            - 'row_index': Original row index
+            - 'col_index': Original column index
+            - 'value': Data value from the block
+            - Columns for each tablemeta key with corresponding values
+            - Columns for each rowmeta key with row-level metadata
+            - Columns for each colmeta key with column-level metadata
+
+    Raises:
+        AssertionError: If input block dimensions don't match template specifications
+
+    """
+    # Validate input block matches template dimensions
+    assert block.shape == (tmpl["block_nrow"], tmpl["block_ncol"])
+
+    # Store original indexes for later reconstruction
+    block_raw_row_idx = block.index
+    block_raw_col_idx = block.columns
+
+    # Convert to position-based integer indexes
+    block = pd.DataFrame(block.values)
+    # Create mapping between positional indexes and original indexes
+    row_idx_map = dict(zip(block.index, block_raw_row_idx))
+    col_idx_map = dict(zip(block.columns, block_raw_col_idx))
+
+    # Extract table-level metadata
+    block_tablemeta: Dict[str, Any] = {}
+    if tmpl["tablemeta"]:
+        for key, pos in tmpl["tablemeta"].items():
+            value = block.loc[pos[0], pos[1]]
+            block_tablemeta[key] = value
+
+    # Extract row-level metadata
+    block_rowmeta: Dict[str, Dict[Any, Any]] = {}
+    if tmpl["rowmeta"]:
+        for key, pos in tmpl["rowmeta"].items():
+            # Slice row metadata range
+            values = dict(block.iloc[pos["start"] : pos["end"] + 1, pos["col"]].items())
+            block_rowmeta[key] = values
+
+    # Extract column-level metadata
+    block_colmeta: Dict[str, Dict[Any, Any]] = {}
+    if tmpl["colmeta"]:
+        for key, pos in tmpl["colmeta"].items():
+            # Slice column metadata range
+            values = dict(block.iloc[pos["row"], pos["start"] : pos["end"] + 1].items())
+            block_colmeta[key] = values
+
+    # Extract core data values
+    data = block.iloc[tmpl["data_rows_list"], tmpl["data_cols_list"]]
+
+    # Convert data to long format (normalized structure)
+    result = data.reset_index(names="row_index").melt(
+        id_vars="row_index", var_name="col_index", value_name="value"
+    )
+
+    # Merge metadata into result
+    for k, v in block_tablemeta.items():
+        result[k] = v
+
+    for k, d in block_rowmeta.items():
+        result[k] = [d.get(i, None) for i in result["row_index"].to_list()]
+
+    for k, d in block_colmeta.items():
+        result[k] = [d.get(i, None) for i in result["col_index"].to_list()]
+
+    # Restore original indexes
+    result["row_index"] = [row_idx_map[i] for i in result["row_index"]]
+    result["col_index"] = [col_idx_map[i] for i in result["col_index"]]
 
     return result
 
