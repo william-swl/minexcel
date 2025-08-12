@@ -2,7 +2,7 @@ from .utils import check_int_serial, read_excel_with_merged_cell
 import openpyxl as opx
 import pandas as pd
 import re
-from typing import Dict, List, Tuple, Set, Any, Union
+from typing import Dict, List, Tuple, Set, Any, Union, Optional
 
 
 def parse_template(template_file: str) -> Dict[str, Any]:
@@ -263,6 +263,7 @@ def parse_block(block: pd.DataFrame, tmpl: Dict[str, Any]) -> pd.DataFrame:
 def read_block_excel(
     path: str,
     tmpl: Dict[str, Any],
+    sheetname: Optional[str] = None,
     skipheader: int = 0,
     skipfooter: int = 0,
     skipleft: int = 0,
@@ -280,6 +281,7 @@ def read_block_excel(
     Args:
         path: Path to the Excel file
         tmpl: Template dictionary defining block structure
+        sheetname: Name of the sheet to read. If None, the active sheet is used
         skipheader: Number of rows to skip at top of sheet
         skipfooter: Number of rows to skip at bottom of sheet
         skipleft: Number of columns to skip at left of sheet
@@ -295,7 +297,7 @@ def read_block_excel(
 
     """
     # Read Excel file with merged cell handling
-    full = read_excel_with_merged_cell(path)
+    full = read_excel_with_merged_cell(path, sheetname=sheetname)
 
     # Extract full contents
     row_start = skipheader
