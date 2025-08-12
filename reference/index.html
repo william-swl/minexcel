@@ -1303,7 +1303,7 @@ Expected shape: (tmpl['block_nrow'], tmpl['block_ncol'])</p>
 
 
 <h2 id="minexcel.block.read_block_excel" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">read_block_excel</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">tmpl</span><span class="p">,</span> <span class="n">skipheader</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipfooter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipleft</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipright</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">intervalrows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">intervalcols</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">read_block_excel</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">tmpl</span><span class="p">,</span> <span class="n">sheetname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">skipheader</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipfooter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipleft</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipright</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">intervalrows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">intervalcols</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1357,6 +1357,22 @@ data.</p>
             </td>
             <td>
                 <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>sheetname</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Name of the sheet to read. If None, the active sheet is used</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1595,9 +1611,12 @@ data.</p>
 <span class="normal">348</span>
 <span class="normal">349</span>
 <span class="normal">350</span>
-<span class="normal">351</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">read_block_excel</span><span class="p">(</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">read_block_excel</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">tmpl</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">sheetname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">skipheader</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">skipfooter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">skipleft</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -1615,6 +1634,7 @@ data.</p>
 <span class="sd">    Args:</span>
 <span class="sd">        path: Path to the Excel file</span>
 <span class="sd">        tmpl: Template dictionary defining block structure</span>
+<span class="sd">        sheetname: Name of the sheet to read. If None, the active sheet is used</span>
 <span class="sd">        skipheader: Number of rows to skip at top of sheet</span>
 <span class="sd">        skipfooter: Number of rows to skip at bottom of sheet</span>
 <span class="sd">        skipleft: Number of columns to skip at left of sheet</span>
@@ -1630,7 +1650,7 @@ data.</p>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Read Excel file with merged cell handling</span>
-    <span class="n">full</span> <span class="o">=</span> <span class="n">read_excel_with_merged_cell</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">read_excel_with_merged_cell</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sheetname</span><span class="o">=</span><span class="n">sheetname</span><span class="p">)</span>
 
     <span class="c1"># Extract full contents</span>
     <span class="n">row_start</span> <span class="o">=</span> <span class="n">skipheader</span>
