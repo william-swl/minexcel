@@ -1,4 +1,4 @@
-from .utils import check_int_serial, read_excel_with_merged_cell
+from .utils import check_int_serial, read_excel_with_merged_cell, index_to_excel_column
 import openpyxl as opx
 import pandas as pd
 import re
@@ -188,8 +188,8 @@ def parse_block(block: pd.DataFrame, tmpl: Dict[str, Any]) -> pd.DataFrame:
 
     Returns:
         pd.DataFrame: DataFrame containing:
-            - 'row_index': Original row index
-            - 'col_index': Original column index
+            - 'row_index': Original row index in full valid contents (after skip rows and cols)
+            - 'col_index': Original column index in full valid contents
             - 'value': Data value from the block
             - Columns for each tablemeta key with corresponding values
             - Columns for each rowmeta key with row-level metadata
@@ -311,25 +311,33 @@ def read_block_excel(
     full = pd.DataFrame(full.values)
 
     # Calculate number of horizontal blocks
-    nblock_in_row = round(full.shape[1] / (tmpl["block_ncol"] + intervalcols))
+    nblock_each_row = round(full.shape[1] / (tmpl["block_ncol"] + intervalcols))
     expected_cols = (
-        nblock_in_row * tmpl["block_ncol"] + (nblock_in_row - 1) * intervalcols
+        nblock_each_row * tmpl["block_ncol"] + (nblock_each_row - 1) * intervalcols
     )
-    assert full.shape[1] == expected_cols, "Columns don't fit block"
+    full_content_cols = full.shape[1]
+
+    assert full_content_cols == expected_cols, (
+        f"Columns don't fit block: {expected_cols} cols expected, {full_content_cols} cols detected in valid full content. Check your skip* config"
+    )
 
     # Calculate number of vertical blocks
-    nblock_in_col = round(full.shape[0] / (tmpl["block_nrow"] + intervalrows))
+    nblock_each_col = round(full.shape[0] / (tmpl["block_nrow"] + intervalrows))
     expected_rows = (
-        nblock_in_col * tmpl["block_nrow"] + (nblock_in_col - 1) * intervalrows
+        nblock_each_col * tmpl["block_nrow"] + (nblock_each_col - 1) * intervalrows
     )
-    assert full.shape[0] == expected_rows, "Rows don't fit block"
+    full_content_rows = full.shape[0]
+
+    assert full_content_rows == expected_rows, (
+        f"Rows don't fit block: {expected_rows} rows expected, {full_content_rows} rows detected in valid full content. Check your skip* config"
+    )
 
     # Calculate starting positions for each block
     block_row_starts = [
-        i * tmpl["block_nrow"] + i * intervalrows for i in range(nblock_in_col)
+        i * tmpl["block_nrow"] + i * intervalrows for i in range(nblock_each_col)
     ]
     block_col_starts = [
-        i * tmpl["block_ncol"] + i * intervalcols for i in range(nblock_in_row)
+        i * tmpl["block_ncol"] + i * intervalcols for i in range(nblock_each_row)
     ]
 
     # Extract all valid data blocks
@@ -349,5 +357,10 @@ def read_block_excel(
     # Parse each block using template and combine results
     result = [parse_block(b, tmpl) for b in blocks]
     result = pd.concat(result, axis=0)
+
+    result["row_excel"] = [i + skipheader + 1 for i in result["row_index"]]
+    result["col_excel"] = [
+        index_to_excel_column(i + skipleft) for i in result["col_index"]
+    ]
 
     return result

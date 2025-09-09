@@ -54,3 +54,17 @@ def read_excel_with_merged_cell(
     df = pd.DataFrame(ws.values, columns=None)
 
     return df
+
+
+def index_to_excel_column(index, zero_based=True):
+    if zero_based:
+        index += 1
+
+    result = []
+    while index > 0:
+        index -= 1
+        remainder = index % 26
+        result.append(chr(65 + remainder))
+        index = index // 26
+
+    return "".join(reversed(result))

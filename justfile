@@ -1,5 +1,7 @@
 test:
-    uv run pytest
+    uv run pytest -v
+snapshot_update:
+    uv run pytest --snapshot-update
 bump v:
     uv version --bump {{v}}
 
