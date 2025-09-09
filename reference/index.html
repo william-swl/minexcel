@@ -537,8 +537,8 @@ Expected shape: (tmpl['block_nrow'], tmpl['block_ncol'])</p>
             <td>
               <div class="doc-md-description">
                 <p>pd.DataFrame: DataFrame containing:
-- 'row_index': Original row index
-- 'col_index': Original column index
+- 'row_index': Original row index in full valid contents (after skip rows and cols)
+- 'col_index': Original column index in full valid contents
 - 'value': Data value from the block
 - Columns for each tablemeta key with corresponding values
 - Columns for each rowmeta key with row-level metadata
@@ -694,8 +694,8 @@ Expected shape: (tmpl['block_nrow'], tmpl['block_ncol'])</p>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame: DataFrame containing:</span>
-<span class="sd">            - &#39;row_index&#39;: Original row index</span>
-<span class="sd">            - &#39;col_index&#39;: Original column index</span>
+<span class="sd">            - &#39;row_index&#39;: Original row index in full valid contents (after skip rows and cols)</span>
+<span class="sd">            - &#39;col_index&#39;: Original column index in full valid contents</span>
 <span class="sd">            - &#39;value&#39;: Data value from the block</span>
 <span class="sd">            - Columns for each tablemeta key with corresponding values</span>
 <span class="sd">            - Columns for each rowmeta key with row-level metadata</span>
@@ -1613,7 +1613,20 @@ data.</p>
 <span class="normal">350</span>
 <span class="normal">351</span>
 <span class="normal">352</span>
-<span class="normal">353</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">read_block_excel</span><span class="p">(</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">read_block_excel</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">tmpl</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">sheetname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1664,25 +1677,33 @@ data.</p>
     <span class="n">full</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
     <span class="c1"># Calculate number of horizontal blocks</span>
-    <span class="n">nblock_in_row</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">intervalcols</span><span class="p">))</span>
+    <span class="n">nblock_each_row</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">intervalcols</span><span class="p">))</span>
     <span class="n">expected_cols</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">nblock_in_row</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">nblock_in_row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">intervalcols</span>
+        <span class="n">nblock_each_row</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">nblock_each_row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">intervalcols</span>
     <span class="p">)</span>
-    <span class="k">assert</span> <span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">expected_cols</span><span class="p">,</span> <span class="s2">&quot;Columns don&#39;t fit block&quot;</span>
+    <span class="n">full_content_cols</span> <span class="o">=</span> <span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">full_content_cols</span> <span class="o">==</span> <span class="n">expected_cols</span><span class="p">,</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Columns don&#39;t fit block: </span><span class="si">{</span><span class="n">expected_cols</span><span class="si">}</span><span class="s2"> cols expected, </span><span class="si">{</span><span class="n">full_content_cols</span><span class="si">}</span><span class="s2"> cols detected in valid full content. Check your skip* config&quot;</span>
+    <span class="p">)</span>
 
     <span class="c1"># Calculate number of vertical blocks</span>
-    <span class="n">nblock_in_col</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">intervalrows</span><span class="p">))</span>
+    <span class="n">nblock_each_col</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">intervalrows</span><span class="p">))</span>
     <span class="n">expected_rows</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">nblock_in_col</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">nblock_in_col</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">intervalrows</span>
+        <span class="n">nblock_each_col</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">nblock_each_col</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">intervalrows</span>
     <span class="p">)</span>
-    <span class="k">assert</span> <span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">expected_rows</span><span class="p">,</span> <span class="s2">&quot;Rows don&#39;t fit block&quot;</span>
+    <span class="n">full_content_rows</span> <span class="o">=</span> <span class="n">full</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">full_content_rows</span> <span class="o">==</span> <span class="n">expected_rows</span><span class="p">,</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Rows don&#39;t fit block: </span><span class="si">{</span><span class="n">expected_rows</span><span class="si">}</span><span class="s2"> rows expected, </span><span class="si">{</span><span class="n">full_content_rows</span><span class="si">}</span><span class="s2"> rows detected in valid full content. Check your skip* config&quot;</span>
+    <span class="p">)</span>
 
     <span class="c1"># Calculate starting positions for each block</span>
     <span class="n">block_row_starts</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">i</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">intervalrows</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nblock_in_col</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_nrow&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">intervalrows</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nblock_each_col</span><span class="p">)</span>
     <span class="p">]</span>
     <span class="n">block_col_starts</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">i</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">intervalcols</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nblock_in_row</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">*</span> <span class="n">tmpl</span><span class="p">[</span><span class="s2">&quot;block_ncol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">intervalcols</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nblock_each_row</span><span class="p">)</span>
     <span class="p">]</span>
 
     <span class="c1"># Extract all valid data blocks</span>
@@ -1702,6 +1723,11 @@ data.</p>
     <span class="c1"># Parse each block using template and combine results</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">parse_block</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">tmpl</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">]</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;row_excel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">skipheader</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;row_index&quot;</span><span class="p">]]</span>
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;col_excel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">index_to_excel_column</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">skipleft</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;col_index&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
 
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
